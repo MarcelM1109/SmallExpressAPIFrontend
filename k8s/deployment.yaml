@@ -25,6 +25,12 @@ spec:
         ports:
         - containerPort: 8080
           name: http
+        env:
+        - name: VITE_BACKEND_URL
+          valueFrom:
+            configMapKeyRef:
+              name: express-test-frontend
+              key: VITE_BACKEND_URL
         resources:
           requests:
             memory: "256Mi"
