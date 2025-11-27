@@ -1,6 +1,9 @@
 import { useState } from 'react'
-import axios from 'axios'
+import { isAxiosError } from 'axios'
+import api from '../../lib/axios'
 import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../../context/AuthContext'
+import type { LoginResponse } from '../../types/auth'
 
 export default function LoginPage() {
     const [email, setEmail] = useState('')
@@ -8,6 +11,7 @@ export default function LoginPage() {
     const [error, setError] = useState('')
     const [loading, setLoading] = useState(false)
     const navigate = useNavigate()
+    const { login } = useAuth()
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
@@ -15,15 +19,16 @@ export default function LoginPage() {
         setLoading(true)
 
         try {
-            const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/auth/login`, {
+            const response = await api.post<LoginResponse>('/auth/login', {
                 email,
                 password
             })
 
-            localStorage.setItem('token', response.data.token)
+            const { user, accessToken, refreshToken } = response.data
+            login(user, { accessToken, refreshToken })
             navigate('/')
         } catch (err) {
-            if (axios.isAxiosError(err) && err.response) {
+            if (isAxiosError(err) && err.response) {
                 setError(err.response.data.message || 'Login fehlgeschlagen')
             } else {
                 setError('Ein Fehler ist aufgetreten')
