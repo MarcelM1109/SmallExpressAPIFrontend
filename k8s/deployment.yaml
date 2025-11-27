@@ -23,17 +23,8 @@ spec:
         image: marcelm119/dev-repo:express-test-frontend-latest
         imagePullPolicy: Always
         ports:
-        - containerPort: 80
+        - containerPort: 8080
           name: http
-        securityContext:
-          runAsNonRoot: true
-          runAsUser: 1000
-          runAsGroup: 1000
-          allowPrivilegeEscalation: false
-          capabilities:
-            drop: ["ALL"]
-          seccompProfile:
-            type: "RuntimeDefault"
         resources:
           requests:
             memory: "256Mi"

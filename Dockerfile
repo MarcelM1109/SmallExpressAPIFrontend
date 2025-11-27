@@ -16,7 +16,7 @@ COPY . .
 RUN npm run build
 
 # Production Stage
-FROM nginx:alpine
+FROM nginxinc/nginx-unprivileged:alpine
 
 # Copy built assets from build stage
 COPY --from=build /app/dist /usr/share/nginx/html
@@ -24,8 +24,6 @@ COPY --from=build /app/dist /usr/share/nginx/html
 # Copy nginx configuration for SPA routing
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-EXPOSE 80
-
-USER 1000:1000
+EXPOSE 8080
 
 CMD ["nginx", "-g", "daemon off;"]

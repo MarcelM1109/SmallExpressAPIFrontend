@@ -12,8 +12,8 @@ spec:
   ports:
   - name: http
     protocol: TCP
-    port: 80
-    targetPort: 80
+    port: 8080
+    targetPort: 8080
   selector:
     # Zeigt auf unser deployment, damit der Service weiß wo eingehende anfragen hin müssen
     app: express-test-frontend
