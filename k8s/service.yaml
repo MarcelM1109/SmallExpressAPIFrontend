@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: express-test-frontend
+  namespace: express-test-frontend
+  labels:
+    app: express-test-frontend
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
+spec:
+  type: ClusterIP
+  ports:
+  - name: http
+    protocol: TCP
+    port: 80
+    targetPort: 80
+  selector:
+    # Zeigt auf unser deployment, damit der Service weiß wo eingehende anfragen hin müssen
+    app: express-test-frontend

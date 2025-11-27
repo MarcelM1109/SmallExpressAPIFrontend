@@ -1,0 +1,41 @@
+# In dieser Datei erstellen wir den ingress für unsere API.
+
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: express-test-server-ingress
+  namespace: express-test
+  annotations:
+    # Hier nennen wir den ClusterIssuer, damit cert-manager automatisch
+    # ein Let's Encrypt SSL-Zertifikat anfordert und im Secret speichert
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+
+    # Force SSL! Leitet alle HTTP-Requests automatisch zu HTTPS um
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+
+    # Wird zuletzt installiert von argocd
+    argocd.argoproj.io/sync-wave: "4"
+spec:
+  ingressClassName: nginx
+
+  # TLS-Konfiguration: Definiert den Hostnamen und welches Secret das
+  # SSL-Zertifikat enthält (wird von cert-manager automatisch erstellt/aktualisiert)
+  tls:
+  - hosts:
+    - frontend.ipremay.de
+    secretName: express-test-frontend-tls
+
+  # Routing-Regeln: Bestimmt, auf welchen Service eingehende Requests 
+  # vom angegebenen Host weitergeleitet werden sollen
+  rules:
+  - host: frontend.ipremay.de
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: express-test-frontend
+            port:
+              number: 80
