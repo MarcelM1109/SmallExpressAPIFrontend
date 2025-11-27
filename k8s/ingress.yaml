@@ -5,7 +5,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: express-test-frontend-ingress
-  namespace: express-test
+  namespace: express-test-frontend
   annotations:
     # Hier nennen wir den ClusterIssuer, damit cert-manager automatisch
     # ein Let's Encrypt SSL-Zertifikat anfordert und im Secret speichert
